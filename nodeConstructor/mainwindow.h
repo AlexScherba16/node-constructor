@@ -2,6 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "diagramScene/diagramScene.hpp"
+#include "diagramView/diagramView.hpp"
+
+
+using QtNodes::DiagramScenee;
+using QtNodes::DiagramView;
+
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +24,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    DiagramScenee*  _scene;
+    DiagramView*    _view;
 };
 
 #endif // MAINWINDOW_H
