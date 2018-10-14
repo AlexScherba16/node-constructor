@@ -3,7 +3,9 @@
 
 #include <QGraphicsObject>
 #include <graphicprimitive.h>
-#include <QGraphicsItemGroup>
+//#include <QGraphicsItemGroup>
+#include "node/node.h"
+
 
 class ActionNodeModel;
 class NodeModel;
@@ -11,7 +13,7 @@ class NodeModel;
 class RectanglePrimitive;
 class TextPrimitive;
 
-class ActionNode : public QGraphicsItemGroup
+class ActionNode : public Node//QGraphicsItemGroup
 {
 
 public:
@@ -20,7 +22,8 @@ public:
 
     QRectF boundingRect() const override;
 
-    void generate();
+    void generateGui();
+    void updateNodeUi();
 protected:
     void
     paint(QPainter*                       painter,

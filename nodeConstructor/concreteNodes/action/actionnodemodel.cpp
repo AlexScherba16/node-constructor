@@ -1,12 +1,13 @@
 #include "actionnodemodel.h"
 #include <QDebug>
 
-ActionNodeModel::ActionNodeModel(){}
+ActionNodeModel::ActionNodeModel() :    _node(nullptr),
+                                        _name("TEST_NAME"),
+                                        _delay("TEST_DELAY"),
+                                        _uncondition("TEST_UNCONDITION")
+{}
 
-ActionNodeModel::~ActionNodeModel()
-{
-
-}
+ActionNodeModel::~ActionNodeModel(){}
 
 void ActionNodeModel::setName(const QString &name){
     _name = name;
@@ -18,9 +19,6 @@ void ActionNodeModel::setDelay(const QString &delay){
 
 void ActionNodeModel::setUncondition(const QString &uncondition){
     _uncondition = uncondition;
-
-//    abstNode->updateUI();
-
 }
 
 QString ActionNodeModel::getName(){
@@ -36,6 +34,9 @@ QString ActionNodeModel::getUncondition(){
 }
 
 void ActionNodeModel::updateNode(){
+    _node->updateNodeUi();
+}
 
-    qDebug() << "updateNode";
+void ActionNodeModel::setNode(Node *node){
+    _node = dynamic_cast<ActionNode*> (node);
 }

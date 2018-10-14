@@ -3,6 +3,9 @@
 
 #include "nodeModel/nodemodel.h"
 
+
+#include "concreteNodes/action/actionnode.h"
+
 class  ActionNodeModel : public NodeModel
 {
     Q_OBJECT
@@ -12,6 +15,9 @@ private:
     QString _name;
     QString _delay;
     QString _uncondition;
+
+    friend class ActionNode;
+    ActionNode* _node;
 
 public:
     ActionNodeModel();
@@ -26,6 +32,7 @@ public:
     QString getUncondition();
 
     void updateNode();
+    void setNode(Node* node);
 
 signals:
 

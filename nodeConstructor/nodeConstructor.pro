@@ -28,8 +28,11 @@ include(graphicsItems/graphicsItems.pri)
 
 include(diagramScene/diagramScene.pri)
 include(diagramView/diagramView.pri)
-include(node/action/actionnode.pri)
+include(node/node.pri)
+#include(node/action/actionnode.pri)
 include(nodeModel/nodeModel.pri)
+include(concreteNodes/concreteNodes.pri)
+
 
 
 SOURCES += \

@@ -2,6 +2,8 @@
 #define NODEMODEL_H
 
 #include <QObject>
+class Node;
+
 
 class NodeModel : public QObject
 {
@@ -12,7 +14,7 @@ private:
 public:
     NodeModel();
     virtual ~NodeModel();
-
+    virtual void setNode(Node* node) {Q_UNUSED(node);}
     virtual void updateNode() {}
 
 signals:

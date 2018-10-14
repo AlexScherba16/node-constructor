@@ -27,10 +27,7 @@ ActionNode::ActionNode(NodeModel* model)
 
     setAcceptHoverEvents(true);
 
-
     _model = dynamic_cast<ActionNodeModel*>(model);
-
-
 }
 
 QRectF ActionNode::boundingRect() const{
@@ -67,7 +64,7 @@ void ActionNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     uncondition->update(uncondition->boundingRect());
 }
 
-void ActionNode::generate(){
+void ActionNode::generateGui(){
 
     indexPr = new RectanglePrimitive();
     namePr = new RectanglePrimitive();
@@ -109,4 +106,12 @@ void ActionNode::generate(){
 //    _vectPrimitive.append((GraphicPrimitive*)delayPr);
 //    _vectPrimitive.append((GraphicPrimitive*)condition );
 //    _vectPrimitive.append((GraphicPrimitive*)uncondition);
+}
+
+void ActionNode::updateNodeUi(){
+    uncondition->setText(_model->getUncondition());
+    uncondition->update(uncondition->boundingRect());
+
+//    _model->getDelay();
+//    _model->getName();
 }

@@ -28,8 +28,9 @@
 
 #include "nodeModel/nodemodel.h"                    //// REMOVE to Registry
 #include "graphicsItems/rectangleprimitive.h"
-#include "node/action/actionnode.h"
-#include "node/action/actionnodemodel.h"
+
+#include "concreteNodes/action/actionnode.h"
+#include "concreteNodes/action/actionnodemodel.h"
 
 using QtNodes::DiagramView;
 
@@ -58,15 +59,13 @@ DiagramView::DiagramView(DiagramScenee *scene) : QGraphicsView(scene), _scene(sc
 void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
 {
     ActionNodeModel* model = new ActionNodeModel;
-    model->setName("TEST_NAME");
-    model->setDelay("TEST_DELAY");
-    model->setUncondition("TEST_UNCONDITION");
-
     ActionNode* actNode = new ActionNode(model);
-    actNode->generate();
-    _scene->addItem(actNode);//new RectanglePrimitive);
+    actNode->generateGui();
+    model->setNode(actNode);
 
-    model->setUncondition("TEST_UNCONDITION234");
+    _scene->addItem(actNode);
+    model->setUncondition("TEST_UNCONad23234");
+    model->updateNode();
 
 //    qDebug() << _scene->addRect(0,0,300,300) << "CONTEXT";
 
