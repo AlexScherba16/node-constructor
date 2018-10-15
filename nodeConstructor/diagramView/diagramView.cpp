@@ -58,15 +58,17 @@ DiagramView::DiagramView(DiagramScenee *scene) : QGraphicsView(scene), _scene(sc
 
 void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
 {
+
+
     ActionNodeModel* model = new ActionNodeModel;
     ActionNode* actNode = new ActionNode(model);
     actNode->generateGui();
-    model->setNode(actNode);
 
     _scene->addItem(actNode);
     model->setUncondition("TEST_UNCONad23234");
     model->updateNode();
 
+    event->accept();
 //    qDebug() << _scene->addRect(0,0,300,300) << "CONTEXT";
 
 //    QMenu modelMenu;
@@ -161,6 +163,7 @@ void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
 
 void DiagramView::wheelEvent(QWheelEvent *event)
 {
+    Q_UNUSED(event)
 //  QPoint delta = event->angleDelta();
 
 //  if (delta.y() == 0)

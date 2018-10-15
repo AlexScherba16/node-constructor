@@ -1,10 +1,10 @@
 #include "actionnodemodel.h"
 #include <QDebug>
 
-ActionNodeModel::ActionNodeModel() :    _node(nullptr),
-                                        _name("TEST_NAME"),
+ActionNodeModel::ActionNodeModel() :    _name("TEST_NAME"),
                                         _delay("TEST_DELAY"),
-                                        _uncondition("TEST_UNCONDITION")
+                                        _uncondition("TEST_UNCONDITION"),
+                                        _node(nullptr)
 {}
 
 ActionNodeModel::~ActionNodeModel(){}

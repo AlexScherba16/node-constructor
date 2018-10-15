@@ -30,9 +30,7 @@ QRectF TextPrimitive::boundingRect() const
 }
 
 void TextPrimitive::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-
-//    qDebug() << _text;
-
+    Q_UNUSED(widget);   Q_UNUSED(option);
     QPen p(Qt::magenta, 5);
     painter->setPen(p);
     painter->drawText(QPointF(0, _height), _text);

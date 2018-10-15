@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     setCentralWidget(_view);
 
+
 //    ActionNode *actNode = new ActionNode();
 //    actNode->generate();
 //    _scene->addItem(actNode);

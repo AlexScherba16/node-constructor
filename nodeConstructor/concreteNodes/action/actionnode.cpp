@@ -28,6 +28,7 @@ ActionNode::ActionNode(NodeModel* model)
     setAcceptHoverEvents(true);
 
     _model = dynamic_cast<ActionNodeModel*>(model);
+    _model->setNode(this);
 }
 
 QRectF ActionNode::boundingRect() const{
@@ -38,8 +39,6 @@ QRectF ActionNode::boundingRect() const{
 void ActionNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
 
     Q_UNUSED(widget);
-
-
 
     QPen pen(painter->pen());
     pen.setStyle(Qt::DashLine);
@@ -59,6 +58,7 @@ QVariant ActionNode::itemChange(QGraphicsItem::GraphicsItemChange change, const 
 }
 
 void ActionNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
+    Q_UNUSED(event)
     _model->setUncondition("QUTWG");
     uncondition->setText(_model->getUncondition());
     uncondition->update(uncondition->boundingRect());
@@ -100,6 +100,9 @@ void ActionNode::generateGui(){
     addToGroup(delayPr);
     addToGroup(condition);
     addToGroup(uncondition);
+
+    qDebug() << __PRETTY_FUNCTION__;
+
 
 //    _vectPrimitive.append((GraphicPrimitive*)indexPr);
 //    _vectPrimitive.append((GraphicPrimitive*)namePr);

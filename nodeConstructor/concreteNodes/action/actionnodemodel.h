@@ -15,8 +15,6 @@ private:
     QString _name;
     QString _delay;
     QString _uncondition;
-
-    friend class ActionNode;
     ActionNode* _node;
 
 public:

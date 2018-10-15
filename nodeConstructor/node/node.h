@@ -11,7 +11,7 @@ class Node : public QGraphicsItemGroup
 //    Q_OBJECT
 public:
     Node() {}
-    Node(NodeModel* model) {}
+    Node(NodeModel* model) {Q_UNUSED(model)}
     virtual ~Node() {}
 
     virtual void generateGui()  {}

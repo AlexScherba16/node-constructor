@@ -26,6 +26,7 @@ QRectF RectanglePrimitive::boundingRect() const{
 
 void RectanglePrimitive::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(widget);
     QPen p(Qt::black, 5);
     painter->setPen(p);
     painter->setClipRect(option->exposedRect);
