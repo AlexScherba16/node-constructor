@@ -34,6 +34,8 @@
 #include "concreteNodes/text/textnode.h"
 #include "concreteNodes/text/textmodel.h"
 
+#include "concreteNodes/framedText/framedtextnode.h"
+
 using QtNodes::DiagramView;
 
 DiagramView::DiagramView(DiagramScenee *scene) : QGraphicsView(scene), _scene(scene)
@@ -71,10 +73,16 @@ void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
     TextModel* model = new TextModel;
     TextNode* actNode = new TextNode(model);
     actNode->generateGui();
-
     _scene->addItem(actNode);
+
+    TextModel* framedModel = new TextModel;
+    FramedTextNode* framedNode = new FramedTextNode(framedModel);
+    framedNode->generateGui();
+     _scene->addItem(framedNode);
+
+
 //    model->setText("TEST_UNCONad23234");
-    model->updateNode();
+//    model->updateNode();
 
 
     event->accept();
