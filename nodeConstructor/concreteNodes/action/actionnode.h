@@ -36,19 +36,14 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
-    QVector<GraphicPrimitive*>  _vectPrimitive;
+//    QVector<GraphicPrimitive*>  _vectPrimitive;
     ActionNodeModel*            _model;
 
     RectanglePrimitive *indexPr;
     RectanglePrimitive *namePr ;
     RectanglePrimitive *delayPr;
     RectanglePrimitive *condition;
-//    RectanglePrimitive *uncondition = new RectanglePrimitive();
     TextPrimitive *uncondition;
-
-
-
-
 };
 
 #endif // ACTIONNODE_H

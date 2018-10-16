@@ -15,7 +15,12 @@
 
 #define ITEM_TEST
 
-ActionNode::ActionNode(NodeModel* model)
+ActionNode::ActionNode(NodeModel* model) : _model(nullptr),
+                                            indexPr(nullptr),
+                                            namePr(nullptr),
+                                            delayPr(nullptr),
+                                            condition(nullptr),
+                                            uncondition(nullptr)
 {
     setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -26,9 +31,10 @@ ActionNode::ActionNode(NodeModel* model)
     setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 
     setAcceptHoverEvents(true);
-
-    _model = dynamic_cast<ActionNodeModel*>(model);
-    _model->setNode(this);
+    if(model){
+        _model = dynamic_cast<ActionNodeModel*>(model);
+        _model->setNode(this);
+    }
 }
 
 QRectF ActionNode::boundingRect() const{
@@ -65,6 +71,8 @@ void ActionNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
 }
 
 void ActionNode::generateGui(){
+    if(indexPr && namePr && delayPr && condition && uncondition)
+        return;
 
     indexPr = new RectanglePrimitive();
     namePr = new RectanglePrimitive();
@@ -102,19 +110,9 @@ void ActionNode::generateGui(){
     addToGroup(uncondition);
 
     qDebug() << __PRETTY_FUNCTION__;
-
-
-//    _vectPrimitive.append((GraphicPrimitive*)indexPr);
-//    _vectPrimitive.append((GraphicPrimitive*)namePr);
-//    _vectPrimitive.append((GraphicPrimitive*)delayPr);
-//    _vectPrimitive.append((GraphicPrimitive*)condition );
-//    _vectPrimitive.append((GraphicPrimitive*)uncondition);
 }
 
 void ActionNode::updateNodeUi(){
     uncondition->setText(_model->getUncondition());
     uncondition->update(uncondition->boundingRect());
-
-//    _model->getDelay();
-//    _model->getName();
 }

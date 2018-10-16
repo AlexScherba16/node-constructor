@@ -73,7 +73,7 @@ void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
     actNode->generateGui();
 
     _scene->addItem(actNode);
-    model->setText("TEST_UNCONad23234");
+//    model->setText("TEST_UNCONad23234");
     model->updateNode();
 
 

@@ -3,7 +3,7 @@
 #include <QHBoxLayout>
 
 
-//#include "diagramView/diagramView.hpp"
+#include "diagramView/diagramView.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
