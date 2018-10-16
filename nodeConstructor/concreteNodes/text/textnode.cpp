@@ -1,5 +1,8 @@
 #include "textnode.h"
 #include "textprimitive.h"
+#include "textmodel.h"
+#include <QStyleOptionGraphicsItem>
+#include <QPainter>
 
 TextNode::TextNode(NodeModel *model){
     setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
@@ -12,8 +15,8 @@ TextNode::TextNode(NodeModel *model){
 
     setAcceptHoverEvents(true);
 
-//    _model = dynamic_cast<TextModel*>(model);
-//    _model->setNode(this);
+    _model = dynamic_cast<TextModel*>(model);
+    _model->setNode(this);
 }
 
 QRectF TextNode::boundingRect() const{
@@ -21,7 +24,15 @@ QRectF TextNode::boundingRect() const{
 }
 
 void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+    Q_UNUSED(widget);
+    QPen pen(painter->pen());
+    pen.setStyle(Qt::DashLine);
+    pen.setColor(QColor(Qt::green));
 
+    painter->setClipRect(option->exposedRect);
+    painter->setPen(pen);
+//    painter->setBrush(Qt::SolidPattern);
+    painter->drawRoundedRect(boundingRect(), 10, 10);
 }
 
 QVariant TextNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value){
@@ -30,10 +41,14 @@ QVariant TextNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QV
 
 void TextNode::generateGui(){
      _text = new TextPrimitive();
-//     _text->setText(_model->getText());
+     _text->setText(_model->getText());
+     _text->setPos(mapFromItem(this,0,0));
+
+
+     addToGroup(_text);
 }
 
 void TextNode::updateNodeUi(){
-//    uncondition->setText(_model->getUncondition());
-//    uncondition->update(uncondition->boundingRect());
+    _text->setText(_model->getText());
+    _text->update(_text->boundingRect());
 }

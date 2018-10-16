@@ -9,5 +9,6 @@ void TextModel::updateNode(){
 }
 
 void TextModel::setNode(Node* node){
-    _node = node;
+    if(node)
+        _node = node;
 }

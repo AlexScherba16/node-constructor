@@ -27,10 +27,12 @@
 #include <QDebug>
 
 #include "nodeModel/nodemodel.h"                    //// REMOVE to Registry
-#include "graphicsItems/rectangleprimitive.h"
 
 #include "concreteNodes/action/actionnode.h"
 #include "concreteNodes/action/actionnodemodel.h"
+
+#include "concreteNodes/text/textnode.h"
+#include "concreteNodes/text/textmodel.h"
 
 using QtNodes::DiagramView;
 
@@ -58,17 +60,27 @@ DiagramView::DiagramView(DiagramScenee *scene) : QGraphicsView(scene), _scene(sc
 
 void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
 {
+//    ActionNodeModel* model = new ActionNodeModel;
+//    ActionNode* actNode = new ActionNode(model);
+//    actNode->generateGui();
 
+//    _scene->addItem(actNode);
+//    model->setUncondition("TEST_UNCONad23234");
+//    model->updateNode();
 
-    ActionNodeModel* model = new ActionNodeModel;
-    ActionNode* actNode = new ActionNode(model);
+    TextModel* model = new TextModel;
+    TextNode* actNode = new TextNode(model);
     actNode->generateGui();
 
     _scene->addItem(actNode);
-    model->setUncondition("TEST_UNCONad23234");
+    model->setText("TEST_UNCONad23234");
     model->updateNode();
 
+
     event->accept();
+
+
+
 //    qDebug() << _scene->addRect(0,0,300,300) << "CONTEXT";
 
 //    QMenu modelMenu;
