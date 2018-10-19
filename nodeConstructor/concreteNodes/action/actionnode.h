@@ -3,7 +3,6 @@
 
 #include <QGraphicsObject>
 #include <graphicprimitive.h>
-//#include <QGraphicsItemGroup>
 #include "node/node.h"
 
 
@@ -13,7 +12,7 @@ class NodeModel;
 class RectanglePrimitive;
 class TextPrimitive;
 
-class ActionNode : public Node//QGraphicsItemGroup
+class ActionNode : public Node
 {
 
 public:
@@ -24,6 +23,7 @@ public:
 
     void generateGui();
     void updateNodeUi();
+
 protected:
     void
     paint(QPainter*                       painter,
@@ -33,10 +33,17 @@ protected:
     QVariant
     itemChange(GraphicsItemChange change, const QVariant &value) override;
 
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
 
+
+    void recalculatePrimitivesSize()    override;
+
 private:
-//    QVector<GraphicPrimitive*>  _vectPrimitive;
+
+    QVector<QRectF> getResizeRects();
     ActionNodeModel*            _model;
 
     RectanglePrimitive *indexPr;

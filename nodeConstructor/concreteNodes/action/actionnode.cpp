@@ -12,10 +12,10 @@
 #include "nodeModel/nodemodel.h"
 #include <QDebug>
 
+#include <QGraphicsScene>
 
-#define ITEM_TEST
-
-ActionNode::ActionNode(NodeModel* model) : _model(nullptr),
+ActionNode::ActionNode(NodeModel* model) :  Node(model),
+                                            _model(nullptr),
                                             indexPr(nullptr),
                                             namePr(nullptr),
                                             delayPr(nullptr),
@@ -38,78 +38,156 @@ ActionNode::ActionNode(NodeModel* model) : _model(nullptr),
 }
 
 QRectF ActionNode::boundingRect() const{
-    return childrenBoundingRect();
-//    return QRectF(0,0, 200, 350);
+    return geometry().nodeBoundingRect();
 }
 
 void ActionNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-
     Q_UNUSED(widget);
 
-    QPen pen(painter->pen());
-    pen.setStyle(Qt::DashLine);
-    pen.setColor(QColor(Qt::green));
+    if(!state().isResizing())
+        return;
 
+    QPen pen(painter->pen());
+    pen.setStyle(Qt::SolidLine);
+    pen.setColor(QColor(Qt::darkCyan));
+    pen.setWidth(1);
+
+    painter->setBrush(Qt::SolidPattern);
     painter->setClipRect(option->exposedRect);
     painter->setPen(pen);
-//    painter->setBrush(Qt::SolidPattern);
-    painter->drawRoundedRect(boundingRect(), 10, 10);
-
+    painter->drawRects(geometry().getResizeRects());
 }
 
-
-QVariant ActionNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
+QVariant ActionNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value){
     return QGraphicsItem::itemChange(change, value);
 }
 
+void ActionNode::mousePressEvent(QGraphicsSceneMouseEvent *event){
+
+    if(event->modifiers() & Qt::ShiftModifier) {
+        state().setResizingState(true);
+        update(boundingRect());
+    }
+    else{
+        state().setResizingState(false);
+        update(boundingRect());
+    }
+
+//    if(geometry().resizeMarkersContainsMouse(event->pos())) {
+//        state().setResizingState(true);
+//    }
+
+    Node::mousePressEvent(event);
+
+//    auto pos     = event->pos();
+//    auto & geom  = _node.nodeGeometry();
+//    auto & state = _node.nodeState();
+
+//    if(!parentItem()){
+//        if (geom.resizeRect().contains(QPoint(pos.x(), pos.y()))){
+//              state.setResizing(true);
+//        }
+//    }
+
+
+
+//    event->ignore();
+
+//    if (!isSelected() && !(event->modifiers() & Qt::ControlModifier)){
+//        scene()->clearSelection();
+    //    }
+}
+
+void ActionNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
+    if(state().isResizing()){
+        if(geometry().resizeMarkersContainsMouse(event->pos())){
+            prepareGeometryChange();
+            auto oldSize = QSize(geometry().width(), geometry().height());
+            auto diff = event->pos() - event->lastPos();
+            oldSize += QSize(diff.x(), diff.y());
+
+            geometry().setWidth(oldSize.width());
+            geometry().setHeight(oldSize.height());
+
+            recalculatePrimitivesSize();
+            geometry().recalculateSize();
+
+            event->accept();
+
+            QRectF r = scene()->sceneRect();
+            r = r.united(mapToScene(boundingRect()).boundingRect());
+            scene()->setSceneRect(r);
+        }
+        else
+            event->ignore();
+    }
+    else
+        Node::mouseMoveEvent(event);
+}
+
 void ActionNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
-    Q_UNUSED(event)
-    _model->setUncondition("QUTWG");
-    uncondition->setText(_model->getUncondition());
-    uncondition->update(uncondition->boundingRect());
+    Node::mouseDoubleClickEvent(event);
+    //    _model->setUncondition("QUTWG");uncondition->setText(_model->getUncondition()); uncondition->update(uncondition->boundingRect());
+}
+
+void ActionNode::recalculatePrimitivesSize(){    
+    auto width  = geometry().width() - 2 * geometry().spacer();
+    auto height = geometry().height() - 2 * geometry().spacer();
+
+    namePr->setWidth(width - delayPr->getWidth());
+    delayPr->setPos(mapFromItem(namePr,namePr->boundingRect().topRight()));
+
+    condition->setWidth(width);
+    condition->setHeight(height - (namePr->getHeight() + delayPr->getHeight() + uncondition->getHeight()));
+
+    uncondition->setWidth(width);
+    uncondition->setPos(mapFromItem(condition,condition->boundingRect().bottomLeft()));
+
+    return;
 }
 
 void ActionNode::generateGui(){
+
     if(indexPr && namePr && delayPr && condition && uncondition)
         return;
+
+    auto x = geometry().spacer();
+    auto y = geometry().spacer();
 
     indexPr = new RectanglePrimitive();
     namePr = new RectanglePrimitive();
     delayPr = new RectanglePrimitive();
     condition = new RectanglePrimitive();
-//    RectanglePrimitive *uncondition = new RectanglePrimitive();
     uncondition = new TextPrimitive();
-
     uncondition->setText(_model->getUncondition());
 
-    indexPr->setWidth(50);      indexPr->setHeight(50);
-    namePr->setWidth(150);      namePr->setHeight(50);
-    delayPr->setWidth(50);      delayPr->setHeight(50);
-    condition->setWidth(200);   condition->setHeight(200);
-    indexPr->setWidth(200);     indexPr->setHeight(50);
+    indexPr->setPos(mapFromItem(this,x, y));
+    indexPr->setWidth(50);      indexPr->setHeight(30);
+    y += indexPr->getHeight();
 
-#ifdef ITEM_TEST
-    indexPr->setPos(mapFromItem(this,0,0));
-    namePr->setPos(mapFromItem(this, 0,50));
-    delayPr->setPos(mapFromItem(this, 150,50));
-    condition->setPos(mapFromItem(this, 0,100));
-    uncondition->setPos(mapFromItem(this, 0,300));
-#else
-    indexPr->setPos(0,0);
-    namePr->setPos(0,50);
-    delayPr->setPos(150,50);
-    condition->setPos(0,100);
-    uncondition->setPos(0,300);
-#endif
+    namePr->setPos(mapFromItem(this, x,y));
+    namePr->setWidth(150);      namePr->setHeight(30);
+    x += namePr->getWidth();
+
+    delayPr->setWidth(50);      delayPr->setHeight(30);
+    delayPr->setPos(mapFromItem(this, x, y));
+    y += delayPr->getHeight();
+    x = geometry().spacer();
+
+    condition->setWidth(200);   condition->setHeight(150);
+    condition->setPos(mapFromItem(this, x, y));
+    y += condition->getHeight();
+
+    uncondition->setWidth(200);   uncondition->setHeight(50);
+    uncondition->setPos(mapFromItem(this, x, y));
 
     addToGroup(indexPr);
     addToGroup(namePr);
     addToGroup(delayPr);
     addToGroup(condition);
     addToGroup(uncondition);
+    geometry().setMinimalSize(childrenBoundingRect().size());
 
-    qDebug() << __PRETTY_FUNCTION__;
 }
 
 void ActionNode::updateNodeUi(){
