@@ -37,7 +37,6 @@ protected:
     void mousePressEvent(QMouseEvent* event) override;
 
 private:
-    int pos;
     DiagramScenee* _scene;
 };
 }

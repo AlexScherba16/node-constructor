@@ -40,9 +40,8 @@ using QtNodes::DiagramView;
 
 DiagramView::DiagramView(DiagramScenee *scene) : QGraphicsView(scene), _scene(scene)
 {
-    pos = 0;
-  setDragMode(QGraphicsView::ScrollHandDrag);
-  setRenderHint(QPainter::Antialiasing);
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    setRenderHint(QPainter::Antialiasing);
 
 //  auto const &flowViewStyle = StyleCollection::flowViewStyle();
 //  setBackgroundBrush(flowViewStyle.BackgroundColor);
@@ -62,23 +61,25 @@ DiagramView::DiagramView(DiagramScenee *scene) : QGraphicsView(scene), _scene(sc
 
 void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
 {
-//    ActionNodeModel* model = new ActionNodeModel;
-//    ActionNode* actNode = new ActionNode(model);
-//    actNode->generateGui();
+    ActionNodeModel* model = new ActionNodeModel;
+    ActionNode* actNode = new ActionNode(model);
+    actNode->generateGui();
 
-//    _scene->addItem(actNode);
+    actNode->setPos(mapFromScene(event->pos()));
+    _scene->addItem(actNode);
+
 //    model->setUncondition("TEST_UNCONad23234");
 //    model->updateNode();
 
-    TextModel* model = new TextModel;
-    TextNode* actNode = new TextNode(model);
-    actNode->generateGui();
-    _scene->addItem(actNode);
+//    TextModel* model = new TextModel;
+//    TextNode* actNode = new TextNode(model);
+//    actNode->generateGui();
+//    _scene->addItem(actNode);
 
-    TextModel* framedModel = new TextModel;
-    FramedTextNode* framedNode = new FramedTextNode(framedModel);
-    framedNode->generateGui();
-     _scene->addItem(framedNode);
+//    TextModel* framedModel = new TextModel;
+//    FramedTextNode* framedNode = new FramedTextNode(framedModel);
+//    framedNode->generateGui();
+//     _scene->addItem(framedNode);
 
 
 //    model->setText("TEST_UNCONad23234");
@@ -140,9 +141,6 @@ void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
 //        QPointF groupScenePos = mapToScene(event->pos());
 //        auto& node1 = _scene->createNode(std::move(type));
 //        if(node1.nodeDataModel()->isGroupModel()){
-
-
-
 
 
 ////            node1.nodeGroupGraphicsObject().setPos(groupScenePos);
