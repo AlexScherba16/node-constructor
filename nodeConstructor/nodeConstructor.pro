@@ -25,15 +25,13 @@ INCLUDEPATH += graphicsItems\
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 include(graphicsItems/graphicsItems.pri)
-
 include(diagramScene/diagramScene.pri)
 include(diagramView/diagramView.pri)
 include(node/node.pri)
-#include(node/action/actionnode.pri)
 include(nodeModel/nodeModel.pri)
 include(concreteNodes/concreteNodes.pri)
-
-
+include(geometry/geometry.pri)
+include(state/state.pri)
 
 SOURCES += \
         main.cpp \

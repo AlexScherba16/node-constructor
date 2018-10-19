@@ -6,17 +6,11 @@ class TextPrimitive : public GraphicPrimitive
 {
     Q_OBJECT
 private:
-    int _widht;
-    int _height;
-
     QString     _text;
 
 public:
     TextPrimitive();
     ~TextPrimitive();
-
-    void setWidth(int v) { _widht = v; }
-    void setHeight(int v){ _height = v;}
 
     void setText(const QString& newText);
     QString getText();

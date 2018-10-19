@@ -4,7 +4,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
 
-TextNode::TextNode(NodeModel *model) : _model(nullptr), _text(nullptr){
+TextNode::TextNode(NodeModel *model) : Node(model), _model(nullptr), _text(nullptr){
     setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsFocusable, true);

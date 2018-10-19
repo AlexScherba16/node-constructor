@@ -6,15 +6,12 @@ class RectanglePrimitive : public GraphicPrimitive
 {
     Q_OBJECT
 private:
-    int _widht;
-    int _height;
+
 
 public:
     RectanglePrimitive();
     ~RectanglePrimitive();
 
-    void setWidth(int v) { _widht = v; }
-    void setHeight(int v){ _height = v;}
 
     QRectF boundingRect() const override;
 
