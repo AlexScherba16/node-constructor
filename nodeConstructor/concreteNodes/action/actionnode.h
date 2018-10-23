@@ -37,7 +37,7 @@ protected:
 
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
-
+    void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
 
     void recalculatePrimitivesSize()    override;
 

@@ -39,16 +39,16 @@ void TextPrimitive::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setClipRect(option->exposedRect);
     painter->drawRect(boundingRect());
 
-    QFont font("bold");
+    QFont font("times", 15);
     QFontMetrics metrics (font);
+
     auto textRect = metrics.boundingRect(_text);
 
-    painter->setPen(QPen(Qt::magenta, 5));
-    double x = /*(double)_widht / 1.0 - */(double)textRect.width() / 1.0;
-    double y = (double)_height / 2.0 - (double)textRect.height() / 2.0;
+    painter->setPen(QPen(Qt::magenta, 3));
 
-    QPointF textPos (x, y);
-    painter->drawText(textPos, _text);
+    QPointF frameCenter = boundingRect().center();
+    textRect.moveCenter(frameCenter.toPoint());
+    painter->drawText(textRect, Qt::AlignCenter, _text);
 }
 
 QVariant TextPrimitive::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value){

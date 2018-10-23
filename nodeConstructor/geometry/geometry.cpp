@@ -6,16 +6,14 @@
 #include <QRectF>
 #include "graphicprimitive.h"
 
-#define RESIZE_RECT_SIZE        40U
+#define RESIZE_RECT_SIZE        10U
 #define OFFSET                  RESIZE_RECT_SIZE/2
 
 Geometry::Geometry() : _spacer(RESIZE_RECT_SIZE),
                        _width(RESIZE_RECT_SIZE),
                        _height(RESIZE_RECT_SIZE),
                        _bottomRightResizeRect(QRectF(0,0,RESIZE_RECT_SIZE,RESIZE_RECT_SIZE))
-{
-
-}
+{}
 
 bool Geometry::resizeMarkersContainsMouse(const QPointF &mousePosition){
     bool contains = false;
@@ -32,7 +30,7 @@ QRectF Geometry::nodeBoundingRect() const{
 
 QVector<QRectF> Geometry::getResizeRects() const{
     QVector<QRectF> rectVector;
-    rectVector << _bottomRightResizeRect;//_topLeftResizeRect << _topRightResizeRect << _bottomLeftResizeRect << _bottomRightResizeRect;
+    rectVector << _bottomRightResizeRect;
     return rectVector;
 }
 

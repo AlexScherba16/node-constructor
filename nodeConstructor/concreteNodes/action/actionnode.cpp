@@ -64,70 +64,52 @@ QVariant ActionNode::itemChange(QGraphicsItem::GraphicsItemChange change, const 
 
 void ActionNode::mousePressEvent(QGraphicsSceneMouseEvent *event){
 
-    if(event->modifiers() & Qt::ShiftModifier) {
-        state().setResizingState(true);
-        update(boundingRect());
-    }
-    else{
-        state().setResizingState(false);
-        update(boundingRect());
-    }
-
-//    if(geometry().resizeMarkersContainsMouse(event->pos())) {
-//        state().setResizingState(true);
-//    }
-
+    bool resizeState = (event->modifiers() & Qt::ShiftModifier) ? true : false;
+    state().setResizingState(resizeState);
+    update();
     Node::mousePressEvent(event);
-
-//    auto pos     = event->pos();
-//    auto & geom  = _node.nodeGeometry();
-//    auto & state = _node.nodeState();
-
-//    if(!parentItem()){
-//        if (geom.resizeRect().contains(QPoint(pos.x(), pos.y()))){
-//              state.setResizing(true);
-//        }
-//    }
-
-
-
-//    event->ignore();
-
-//    if (!isSelected() && !(event->modifiers() & Qt::ControlModifier)){
-//        scene()->clearSelection();
-    //    }
 }
 
 void ActionNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     if(state().isResizing()){
-        if(geometry().resizeMarkersContainsMouse(event->pos())){
-            prepareGeometryChange();
-            auto oldSize = QSize(geometry().width(), geometry().height());
-            auto diff = event->pos() - event->lastPos();
-            oldSize += QSize(diff.x(), diff.y());
+        prepareGeometryChange();
+        auto oldSize = QSize(geometry().width(), geometry().height());
+        auto diff = event->pos() - event->lastPos();
+        oldSize += QSize(diff.x(), diff.y());
 
-            geometry().setWidth(oldSize.width());
-            geometry().setHeight(oldSize.height());
+        geometry().setWidth(oldSize.width());
+        geometry().setHeight(oldSize.height());
 
-            recalculatePrimitivesSize();
-            geometry().recalculateSize();
+        recalculatePrimitivesSize();
+        geometry().recalculateSize();
 
-            event->accept();
+        update();
 
-            QRectF r = scene()->sceneRect();
-            r = r.united(mapToScene(boundingRect()).boundingRect());
-            scene()->setSceneRect(r);
-        }
-        else
-            event->ignore();
+        event->accept();
     }
-    else
+    else{
         Node::mouseMoveEvent(event);
+    }
+    QRectF r = scene()->sceneRect();
+    r = r.united(mapToScene(boundingRect()).boundingRect());
+    scene()->setSceneRect(r);
 }
 
 void ActionNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     Node::mouseDoubleClickEvent(event);
     //    _model->setUncondition("QUTWG");uncondition->setText(_model->getUncondition()); uncondition->update(uncondition->boundingRect());
+}
+
+void ActionNode::hoverMoveEvent(QGraphicsSceneHoverEvent *event){
+    auto & geom = geometry();
+    if (geom.resizeMarkersContainsMouse(event->pos()) && state().isResizing()){// .resizeRect().contains(QPoint(pos.x(), pos.y()))){
+      setCursor(QCursor(Qt::SizeFDiagCursor));
+    }
+    else{
+      setCursor(QCursor());
+    }
+
+    event->accept();
 }
 
 void ActionNode::recalculatePrimitivesSize(){    
