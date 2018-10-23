@@ -5,12 +5,10 @@ class QPointF;
 class QGraphicsItem;
 
 #include <QRectF>
-//#include <QGraphicsRectItem>
 
 class Geometry
 {
 private:
-//    QGraphicsRectItem _bottomRightResizeRect;
     QRectF  _bottomRightResizeRect;
 
     unsigned int _spacer;

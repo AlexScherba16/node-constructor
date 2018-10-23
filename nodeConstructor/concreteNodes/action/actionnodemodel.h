@@ -21,16 +21,16 @@ public:
     ActionNodeModel();
     ~ActionNodeModel();
 
-    void setName(const QString& name);
-    void setDelay(const QString& delay);
-    void setUncondition(const QString& uncondition);
+    void setName(const QString& name)                   {_name = name;}
+    void setDelay(const QString& delay)                 {_delay = delay;}
+    void setUncondition(const QString& uncondition)     {_uncondition = uncondition;}
 
-    QString getName();
-    QString getDelay();
-    QString getUncondition();
+    QString getName()                                   {return _name;}
+    QString getDelay()                                  {return _delay;}
+    QString getUncondition()                            {return _uncondition;}
 
-    void updateNode();
-    void setNode(Node* node);
+    void updateNode()                                   {_node->updateNodeUi();}
+    void setNode(Node* node)                            {_node = dynamic_cast<ActionNode*> (node);}
 
 signals:
 
