@@ -5,8 +5,7 @@
 #include <QStyleOptionGraphicsItem>
 
 
-RectanglePrimitive::RectanglePrimitive()
-{
+RectanglePrimitive::RectanglePrimitive(){
     _widht = 100;
     _height = 80;
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -21,12 +20,7 @@ RectanglePrimitive::~RectanglePrimitive(){
 
 }
 
-QRectF RectanglePrimitive::boundingRect() const{  
-    return QRectF(0, 0, _widht, _height);
-}
-
-void RectanglePrimitive::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
+void RectanglePrimitive::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
     Q_UNUSED(widget);
     QPen p(Qt::black, 1);
     painter->setPen(p);
@@ -37,3 +31,4 @@ void RectanglePrimitive::paint(QPainter *painter, const QStyleOptionGraphicsItem
 QVariant RectanglePrimitive::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value){
     return QGraphicsItem::itemChange(change, value);
 }
+

@@ -12,10 +12,6 @@ public:
     RectanglePrimitive();
     ~RectanglePrimitive();
 
-
-    QRectF boundingRect() const override;
-
-
 protected:
     void
     paint(QPainter*                       painter,
@@ -24,6 +20,8 @@ protected:
 
     QVariant
     itemChange(GraphicsItemChange change, const QVariant &value) override;
+
+//    void mousePressEvent(QGraphicsSceneMouseEvent *event)       override;
 
 };
 

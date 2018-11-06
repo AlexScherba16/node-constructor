@@ -15,8 +15,6 @@ public:
     void setText(const QString& newText);
     QString getText();
 
-    QRectF boundingRect() const override;
-
 protected:
     void
     paint(QPainter*                       painter,
