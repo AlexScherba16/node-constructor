@@ -1,18 +1,12 @@
 #include "actionnode.h"
-
 #include <rectangleprimitive.h>
 #include "textprimitive.h"
+#include "framedtextprimitive.h"
 
-#include <QPainter>
-#include <QPen>
-#include <QStyleOptionGraphicsItem>
 #include "actionnodemodel.h"
+#include "nodeDelegate/ActionNodeDelegate/actionnodedelegate.h"
 
-#include <QGraphicsSceneMouseEvent>
-#include "nodeModel/nodemodel.h"
 #include <QDebug>
-
-#include <QGraphicsScene>
 
 ActionNode::ActionNode(NodeModel* model) :  Node(model),
                                             _model(nullptr),
@@ -22,14 +16,14 @@ ActionNode::ActionNode(NodeModel* model) :  Node(model),
                                             condition(nullptr),
                                             uncondition(nullptr)
 {
-    setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
+//    setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsFocusable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
-//    setHandlesChildEvents(false);
     setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 
+//    setHandlesChilbdEvents(false);
     setAcceptHoverEvents(true);
     if(model){
         _model = dynamic_cast<ActionNodeModel*>(model);
@@ -37,82 +31,15 @@ ActionNode::ActionNode(NodeModel* model) :  Node(model),
     }
 }
 
-QRectF ActionNode::boundingRect() const{
-    return geometry().nodeBoundingRect();
-}
-
 void ActionNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    Q_UNUSED(widget);
-
-    if(!state().isResizing())
-        return;
-
-    QPen pen(painter->pen());
-    pen.setStyle(Qt::SolidLine);
-    pen.setColor(QColor(Qt::darkCyan));
-    pen.setWidth(1);
-
-    painter->setBrush(Qt::SolidPattern);
-    painter->setClipRect(option->exposedRect);
-    painter->setPen(pen);
-    painter->drawRects(geometry().getResizeRects());
+    Node::paint(painter,option,widget);
 }
 
 QVariant ActionNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value){
     return QGraphicsItem::itemChange(change, value);
 }
 
-void ActionNode::mousePressEvent(QGraphicsSceneMouseEvent *event){
-
-    bool resizeState = (event->modifiers() & Qt::ShiftModifier) ? true : false;
-    state().setResizingState(resizeState);
-    update();
-    Node::mousePressEvent(event);
-}
-
-void ActionNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
-    if(state().isResizing()){
-        prepareGeometryChange();
-        auto oldSize = QSize(geometry().width(), geometry().height());
-        auto diff = event->pos() - event->lastPos();
-        oldSize += QSize(diff.x(), diff.y());
-
-        geometry().setWidth(oldSize.width());
-        geometry().setHeight(oldSize.height());
-
-        recalculatePrimitivesSize();
-        geometry().recalculateSize();
-
-        update();
-
-        event->accept();
-    }
-    else{
-        Node::mouseMoveEvent(event);
-    }
-    QRectF r = scene()->sceneRect();
-    r = r.united(mapToScene(boundingRect()).boundingRect());
-    scene()->setSceneRect(r);
-}
-
-void ActionNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
-    Node::mouseDoubleClickEvent(event);
-    //    _model->setUncondition("QUTWG");uncondition->setText(_model->getUncondition()); uncondition->update(uncondition->boundingRect());
-}
-
-void ActionNode::hoverMoveEvent(QGraphicsSceneHoverEvent *event){
-    auto & geom = geometry();
-    if (geom.resizeMarkersContainsMouse(event->pos()) && state().isResizing()){// .resizeRect().contains(QPoint(pos.x(), pos.y()))){
-      setCursor(QCursor(Qt::SizeFDiagCursor));
-    }
-    else{
-      setCursor(QCursor());
-    }
-
-    event->accept();
-}
-
-void ActionNode::recalculatePrimitivesSize(){    
+void ActionNode::recalculatePrimitivesSize(){
     auto width  = geometry().width() - 2 * geometry().spacer();
     auto height = geometry().height() - 2 * geometry().spacer();
 
@@ -124,8 +51,25 @@ void ActionNode::recalculatePrimitivesSize(){
 
     uncondition->setWidth(width);
     uncondition->setPos(mapFromItem(condition,condition->boundingRect().bottomLeft()));
-
     return;
+}
+
+void ActionNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event){
+    auto boundingNode = isInsideBounding(collidingItems(Qt::ContainsItemShape));
+
+    if(parentItem() == nullptr){
+        if(boundingNode){
+            state().setInsideBoundingState(true);
+            boundingNode->addToGroup(this);
+        }
+    }
+    else{
+        if(boundingNode == nullptr){
+            ((Node*)parentItem())->removeFromGroup(this);
+            state().setInsideBoundingState(false);
+        }
+    }
+    Node::mouseReleaseEvent(event);
 }
 
 void ActionNode::generateGui(){
@@ -136,12 +80,16 @@ void ActionNode::generateGui(){
     auto x = geometry().spacer();
     auto y = geometry().spacer();
 
-    indexPr = new RectanglePrimitive();
-    namePr = new RectanglePrimitive();
-    delayPr = new RectanglePrimitive();
-    condition = new RectanglePrimitive();
-    uncondition = new TextPrimitive();
+    indexPr     = new FramedTextPrimitive();
+    namePr      = new FramedTextPrimitive();
+    delayPr     = new FramedTextPrimitive();
+    condition   = new RectanglePrimitive();
+    uncondition = new FramedTextPrimitive();
+
+    indexPr->setText(_model->getIndex());
+    namePr->setText(_model->getName());
     uncondition->setText(_model->getUncondition());
+    delayPr->setText(_model->getDelay());
 
     indexPr->setPos(mapFromItem(this,x, y));
     indexPr->setWidth(50);      indexPr->setHeight(30);
@@ -169,10 +117,17 @@ void ActionNode::generateGui(){
     addToGroup(condition);
     addToGroup(uncondition);
     geometry().setMinimalSize(childrenBoundingRect().size());
-
 }
 
 void ActionNode::updateNodeUi(){
-    uncondition->setText(_model->getUncondition());
-    uncondition->update(uncondition->boundingRect());
+    indexPr->setText(_model->getIndex());           indexPr->update(indexPr->boundingRect());
+    namePr->setText(_model->getName());             namePr->update(namePr->boundingRect());
+    delayPr->setText(_model->getDelay());           delayPr->update(delayPr->boundingRect());
+    uncondition->setText(_model->getUncondition()); uncondition->update(uncondition->boundingRect());
+}
+
+void ActionNode::invokeNodeDelegate(){
+    ActionNodeDelegate delegate(_model);
+    if(delegate.exec())
+        updateNodeUi();
 }

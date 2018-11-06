@@ -11,6 +11,7 @@ class NodeModel;
 
 class RectanglePrimitive;
 class TextPrimitive;
+class FramedTextPrimitive;
 
 class ActionNode : public Node
 {
@@ -19,10 +20,9 @@ public:
     ActionNode(NodeModel* model );
     ~ActionNode() = default;
 
-    QRectF boundingRect() const override;
-
     void generateGui();
     void updateNodeUi();
+    void invokeNodeDelegate();
 
 protected:
     void
@@ -33,24 +33,18 @@ protected:
     QVariant
     itemChange(GraphicsItemChange change, const QVariant &value) override;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-
-    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
-    void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
-
     void recalculatePrimitivesSize()    override;
 
-private:
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event)     override;
 
-    QVector<QRectF> getResizeRects();
+private:
     ActionNodeModel*            _model;
 
-    RectanglePrimitive *indexPr;
-    RectanglePrimitive *namePr ;
-    RectanglePrimitive *delayPr;
-    RectanglePrimitive *condition;
-    TextPrimitive *uncondition;
+    FramedTextPrimitive *indexPr;
+    FramedTextPrimitive *namePr ;
+    FramedTextPrimitive *delayPr;
+    RectanglePrimitive  *condition;
+    FramedTextPrimitive *uncondition;
 };
 
 #endif // ACTIONNODE_H
