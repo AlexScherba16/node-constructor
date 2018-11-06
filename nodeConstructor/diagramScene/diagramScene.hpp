@@ -8,19 +8,17 @@
 #include <memory>
 #include <functional>
 
+#include "node/node.h"
+
 //#include "Connection.hpp"
 //#include "Export.hpp"
 //#include "DataModelRegistry.hpp"
 
-namespace QtNodes
-{
-
-class NodeDataModel;
 class FlowItemInterface;
-class Node;
 class NodeGraphicsObject;
 class ConnectionGraphicsObject;
 class NodeStyle;
+class NodeDataStyled;
 
 /// Scene holds connections and nodes.
 class DiagramScenee : public QGraphicsScene
@@ -51,8 +49,7 @@ public:
 //  void
 //  deleteConnection(Connection& connection);
 
-//  Node&
-//  createNode(std::unique_ptr<NodeDataModel> && dataModel);
+  /*Node&*/ void createNode(std::unique_ptr<NodeModel> && dataModel);
 
 //  Node&
 //  restoreNode(QJsonObject const& nodeJson);
@@ -107,14 +104,15 @@ signals:
 private:
 
 //  using SharedConnection = std::shared_ptr<Connection>;
-//  using UniqueNode       = std::unique_ptr<Node>;
-
 //  std::unordered_map<QUuid, SharedConnection> _connections;
-//  std::unordered_map<QUuid, UniqueNode>       _nodes;
+
+  using UniqueNode       = std::unique_ptr<Node>;
+  std::unordered_map<QUuid, UniqueNode>             _nodes;
+
 //  std::shared_ptr<DataModelRegistry>          _registry;
 };
 
 //Node*
 //locateNodeAt(QPointF scenePoint, FlowScene &scene,
 //             QTransform viewTransform);
-}
+

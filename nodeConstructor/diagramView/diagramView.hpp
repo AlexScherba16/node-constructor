@@ -2,10 +2,18 @@
 
 #include <QtWidgets/QGraphicsView>
 
-//#include "Export.hpp"
+#include "nodeModel/nodemodel.h"                    //// TODO move to Registry
+#include "concreteNodes/action/actionnode.h"
+#include "concreteNodes/action/actionnodemodel.h"
 
-namespace QtNodes
-{
+#include "concreteNodes/text/textnode.h"
+#include "concreteNodes/text/textmodel.h"
+
+#include "concreteNodes/framedText/framedtextnode.h"
+
+#include "concreteNodes/bounding/boundingmodel.h"
+#include "concreteNodes/bounding/boundingnode.h"
+
 
 class DiagramScenee;
 
@@ -38,5 +46,10 @@ protected:
 
 private:
     DiagramScenee* _scene;
+
+
+    ActionNodeModel*    _actionModel;
+    BoundingModel*      _boundingModel;
+    TextModel*          _textModel;
 };
-}
+//}

@@ -27,7 +27,7 @@
 //#include "FlowView.hpp"
 //#include "DataModelRegistry.hpp"
 
-using QtNodes::DiagramScenee;
+//using QtNodes::DiagramScenee;
 //using QtNodes::Node;
 //using QtNodes::NodeGraphicsObject;
 //using QtNodes::Connection;
@@ -47,9 +47,21 @@ DiagramScenee::DiagramScenee()//std::shared_ptr<DataModelRegistry> registry)
 DiagramScenee::~DiagramScenee()
 {
   //_connections.clear();
-  //_nodes.clear();
+    //_nodes.clear();
 }
 
+void DiagramScenee::createNode(std::unique_ptr<NodeModel> &&dataModel)
+{
+
+//        auto node = make_unique<Node>(std::move(dataModel));
+
+    //    auto ngo  = detail::make_unique<NodeGraphicsObject>(*this, *node);
+    //    node->setGraphicsObject(std::move(ngo));
+    //    auto nodePtr = node.get();
+    //    _nodes[node->id()] = std::move(node);
+    //    nodeCreated(*nodePtr);
+    //    return *nodePtr;
+}
 
 //------------------------------------------------------------------------------
 
@@ -128,26 +140,6 @@ DiagramScenee::~DiagramScenee()
 //    connection.removeFromNodes();
 //    _connections.erase(connection.id());
 //}
-
-//Node& DiagramScene::createNode(std::unique_ptr<NodeDataModel> && dataModel){
-//    bool isGroupResult = dataModel->isGroupModel();
-//    auto node = std::make_unique<Node>(std::move(dataModel));
-
-//    if(isGroupResult){
-//        qDebug() << "TestGroupObject" << node->nodeDataModel()->getModelHeader().getModelCaption();
-//        node->setGraphicsObject(std::move(std::make_unique<TestGroupObject>(*this, *node)));
-//    }
-//    else{
-//        qDebug() << "NodeGraphicsObject" << node->nodeDataModel()->getModelHeader().getModelCaption();
-//        node->setGraphicsObject(std::move(std::make_unique<NodeGraphicsObject>(*this, *node)));
-//    }
-
-//    auto nodePtr = node.get();
-//    _nodes[node->id()] = std::move(node);
-//    nodeCreated(*nodePtr);
-//    return *nodePtr;
-//}
-
 
 //Node&
 //DiagramScene::

@@ -26,71 +26,78 @@
 
 #include <QDebug>
 
-#include "nodeModel/nodemodel.h"                    //// REMOVE to Registry
-
-#include "concreteNodes/action/actionnode.h"
-#include "concreteNodes/action/actionnodemodel.h"
-
-#include "concreteNodes/text/textnode.h"
-#include "concreteNodes/text/textmodel.h"
-
-#include "concreteNodes/framedText/framedtextnode.h"
-
-using QtNodes::DiagramView;
+//using QtNodes::DiagramView;
 
 DiagramView::DiagramView(DiagramScenee *scene) : QGraphicsView(scene), _scene(scene)
 {
+    _actionModel    = new ActionNodeModel;
+    _boundingModel  = new BoundingModel;
+    _textModel      = new TextModel;
+
+
+
     setDragMode(QGraphicsView::ScrollHandDrag);
     setRenderHint(QPainter::Antialiasing);
 
-//  auto const &flowViewStyle = StyleCollection::flowViewStyle();
-//  setBackgroundBrush(flowViewStyle.BackgroundColor);
+    setBackgroundBrush(QBrush(QColor(53,70,70)));
+//    setBackgroundBrush(QBrush(QColor(53,53,53)));
 
   //setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   //setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
+
   setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
   setCacheMode(QGraphicsView::CacheBackground);
 
-  //setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+//  setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 }
 
 
-void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
-{
-    ActionNodeModel* model = new ActionNodeModel;
-    ActionNode* actNode = new ActionNode(model);
-    actNode->generateGui();
+void DiagramView:: contextMenuEvent(QContextMenuEvent *event){
+    _scene->clearSelection();
 
-    actNode->setPos(mapFromScene(event->pos()));
-    _scene->addItem(actNode);
+    QMenu modelMenu;
+    modelMenu.addAction("Bounding node");
+    modelMenu.addAction("Action node");
+    if (QAction * action = modelMenu.exec(event->globalPos())){
+        NodeModel* model = nullptr;
+        Node* node = nullptr;
 
-//    model->setUncondition("TEST_UNCONad23234");
-//    model->updateNode();
+        if(action->text() == "Bounding node"){
+            model = new BoundingModel;
+            node = new BoundingNode(model);
+        }
+        else if(action->text() == "Action node"){
+            model = new ActionNodeModel;
+            node = new ActionNode(model);
+        }
+        node->generateGui();
+        node->setPos(mapToScene(event->pos()));
+        _scene->addItem(node);
+    }
 
-//    TextModel* model = new TextModel;
-//    TextNode* actNode = new TextNode(model);
-//    actNode->generateGui();
-//    _scene->addItem(actNode);
-
-//    TextModel* framedModel = new TextModel;
-//    FramedTextNode* framedNode = new FramedTextNode(framedModel);
-//    framedNode->generateGui();
-//     _scene->addItem(framedNode);
+//    auto nodetype = _actionModel->clone();
+//    if(type){
+//        auto& node = _scene->createNode(std::move(type));
 
 
-//    model->setText("TEST_UNCONad23234");
-//    model->updateNode();
+//    }
 
+//    auto type = _scene->registry().create(modelName);
+//    if (type){
+//        auto& node = _scene->createNode(std::move(type));
+//        QPoint pos = event->pos();
+//        QPointF posView = this->mapToScene(pos);
+//        node.nodeGraphicsObject().setPos(posView);
+//    }
+//    else
+//      qDebug() << "Model not found";
 
     event->accept();
 
-
-
-//    qDebug() << _scene->addRect(0,0,300,300) << "CONTEXT";
 
 //    QMenu modelMenu;
 
@@ -142,89 +149,54 @@ void DiagramView:: contextMenuEvent(QContextMenuEvent *event)
 //        auto& node1 = _scene->createNode(std::move(type));
 //        if(node1.nodeDataModel()->isGroupModel()){
 
-
-////            node1.nodeGroupGraphicsObject().setPos(groupScenePos);
-
-////            QVector<NodeGraphicsObject*> nodes;
-////            nodes.append(&_scene->createNode(_scene->registry().create("Condition")).nodeGraphicsObject());
-////            nodes.append(&_scene->createNode(_scene->registry().create("Condition")).nodeGraphicsObject());
-////            nodes.append(&_scene->createNode(_scene->registry().create("Condition")).nodeGraphicsObject());
-////            nodes.append(&_scene->createNode(_scene->registry().create("Assotiative Comment")).nodeGraphicsObject());
-
-//////            nodes.append(&node3.nodeGraphicsObject());
-//////            nodes.append(&node4.nodeGraphicsObject());
-//////            nodes.append(&node5.nodeGraphicsObject());
-////            node1.nodeGroupGraphicsObject().appendNodes(nodes);
-////            _scene->addItem(&node1.nodeGroupGraphicsObject());
-//        }
-//        else{
-//            node1.nodeGraphicsObject().setPos(groupScenePos);
-//            _scene->addItem(&node1.nodeGraphicsObject());
-//        }
-
-////        auto& node2 = _scene->createNode(_scene->registry().create("Action"));
-////        auto& node3 = _scene->createNode(_scene->registry().create("Action"));
-////        nodes.append(&node1.nodeGraphicsObject());
-////        nodes.append(&node2.nodeGraphicsObject());
-////        nodes.append(&node3.nodeGraphicsObject());
-////        group->appendNodes(nodes);
-
-////        _scene->addItem(group);
-//    }
-//    else
-//    {
-//        qDebug() << "Model not found";
-//    }
-//  }
 }
 
 
 void DiagramView::wheelEvent(QWheelEvent *event)
 {
     Q_UNUSED(event)
-//  QPoint delta = event->angleDelta();
+    QPoint delta = event->angleDelta();
 
-//  if (delta.y() == 0)
-//  {
-//    event->ignore();
-//    return;
-//  }
+  if (delta.y() == 0)
+  {
+        event->ignore();
+        return;
+  }
 
-//  double const d = delta.y() / std::abs(delta.y());
+  double const d = delta.y() / std::abs(delta.y());
 
-//  if (d > 0.0)
-//    scaleUp();
-//  else
-//    scaleDown();
+  if (d > 0.0)
+    scaleUp();
+  else
+    scaleDown();
 }
 
 
 void DiagramView::scaleUp()
 {
-//    double const step   = 1.2;
-//    double const factor = std::pow(step, 1.0);
+    double const step   = 1.2;
+    double const factor = std::pow(step, 1.0);
 
-//    QTransform t = transform();
+    QTransform t = transform();
 
-//  if (t.m11() > 2.0)
-//    return;
-//  scale(factor, factor);
+  if (t.m11() > 2.0)
+    return;
+  scale(factor, factor);
 }
 
 
 void DiagramView::scaleDown()
 {
-//  double const step   = 1.2;
-//  double const factor = std::pow(step, -1.0);
-
-//  scale(factor, factor);
-}
+  double const step   = 1.2;
+  double const factor = std::pow(step, -1.0);
+  scale(factor, factor);
+  }
 
 
 void DiagramView::keyPressEvent(QKeyEvent *event)
 {
-//  switch (event->key())
-//  {
+//    switch (event->key())
+//    {
 //    case Qt::Key_Escape:
 //      _scene->clearSelection();
 //      break;
@@ -283,49 +255,48 @@ void DiagramView::drawBackground(QPainter* painter, const QRectF& r)
 {
   QGraphicsView::drawBackground(painter, r);
 
-//  auto drawGrid =
-//  [&](double gridStep)
-//  {
-//    QRect   windowRect = rect();
-//    QPointF tl = mapToScene(windowRect.topLeft());
-//    QPointF br = mapToScene(windowRect.bottomRight());
+  auto drawGrid =
+  [&](double gridStep)
+  {
+    QRect   windowRect = rect();
+    QPointF tl = mapToScene(windowRect.topLeft());
+    QPointF br = mapToScene(windowRect.bottomRight());
 
-//    double left   = std::floor(tl.x() / gridStep - 0.5);
-//    double right  = std::floor(br.x() / gridStep + 1.0);
-//    double bottom = std::floor(tl.y() / gridStep - 0.5);
-//    double top    = std::floor (br.y() / gridStep + 1.0);
+    double left   = std::floor(tl.x() / gridStep - 0.5);
+    double right  = std::floor(br.x() / gridStep + 1.0);
+    double bottom = std::floor(tl.y() / gridStep - 0.5);
+    double top    = std::floor (br.y() / gridStep + 1.0);
 
-//    // vertical lines
-//    for (int xi = int(left); xi <= int(right); ++xi)
-//    {
-//      QLineF line(xi * gridStep, bottom * gridStep,
-//                  xi * gridStep, top * gridStep );
+    // vertical lines
+    for (int xi = int(left); xi <= int(right); ++xi)
+    {
+      QLineF line(xi * gridStep, bottom * gridStep,
+                  xi * gridStep, top * gridStep );
 
-//      painter->drawLine(line);
-//    }
+      painter->drawLine(line);
+    }
 
-//    // horizontal lines
-//    for (int yi = int(bottom); yi <= int(top); ++yi)
-//    {
-//      QLineF line(left * gridStep, yi * gridStep,
-//                  right * gridStep, yi * gridStep );
-//      painter->drawLine(line);
-//    }
-//  };
+    // horizontal lines
+    for (int yi = int(bottom); yi <= int(top); ++yi)
+    {
+      QLineF line(left * gridStep, yi * gridStep,
+                  right * gridStep, yi * gridStep );
+      painter->drawLine(line);
+    }
+  };
 
 //  auto const &flowViewStyle = StyleCollection::flowViewStyle();
-
 //  QBrush bBrush = backgroundBrush();
 
-//  QPen pfine(flowViewStyle.FineGridColor, 1.0);
+  QPen pfine(QColor(60,60,60), 1.0);//(flowViewStyle.FineGridColor, 1.0);
 
-//  painter->setPen(pfine);
-//  drawGrid(15);
+  painter->setPen(pfine);
+  drawGrid(15);
 
-//  QPen p(flowViewStyle.CoarseGridColor, 1.0);
+  QPen p(QColor(25,25,25), 1.0);  // flowViewStyle.CoarseGridColor, 1.0);
 
-//  painter->setPen(p);
-//  drawGrid(150);
+  painter->setPen(p);
+  drawGrid(150);
 }
 
 
@@ -335,7 +306,26 @@ void DiagramView::showEvent(QShowEvent *event){
 }
 
 void DiagramView::mousePressEvent(QMouseEvent* event){
-  QGraphicsView::mousePressEvent(event);
+//    auto list = _scene->items();        // TODO _scene->nodes()
+//    if(event->button() == Qt::LeftButton && list.size()){
+
+//        foreach (auto item , list) {
+//            auto node = dynamic_cast<Node* >(item);
+//            if(node){
+//                auto bottomLeft = node->geometry().nodeBoundingRect().bottomLeft();
+//                qDebug() << node->pos() << event->pos() << mapToScene(event->pos()) << mapFromScene(event->pos()) << node->boundingRect().contains(mapFromScene(event->pos()));
+
+////                if(node->geometry().nodeBoundingRect().contains(mapToScene(event->pos()))){
+////                    qDebug() << "CONTAINS";
+////                }
+////                else{
+////                    qDebug() << "DESELECT";
+//                    node->state().setSelectedState(false);
+////                }
+//            }
+//        }
+//    }
+    QGraphicsView::mousePressEvent(event);
 }
 
 void DiagramView::mouseMoveEvent(QMouseEvent* event){
