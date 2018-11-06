@@ -15,18 +15,20 @@ public:
     TextNode(NodeModel* model );
     ~TextNode() = default;
 
-    QRectF boundingRect() const override;
-
     void generateGui();
     void updateNodeUi();
 
 protected:
     void paint( QPainter* painter,
                 QStyleOptionGraphicsItem const* option,
-                QWidget*                        widget = 0) override;
+                QWidget*                        widget = 0)         override;
 
     QVariant
-    itemChange(GraphicsItemChange change, const QVariant &value) override;
+    itemChange(GraphicsItemChange change, const QVariant &value)    override;
+    void recalculatePrimitivesSize()                                override;
+
+
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
     TextModel*          _model;

@@ -28,17 +28,20 @@ include(graphicsItems/graphicsItems.pri)
 include(diagramScene/diagramScene.pri)
 include(diagramView/diagramView.pri)
 include(node/node.pri)
+include(nodePainter/nodePainter.pri)
 include(nodeModel/nodeModel.pri)
 include(concreteNodes/concreteNodes.pri)
 include(geometry/geometry.pri)
 include(state/state.pri)
+include(nodeDelegate/nodeDelegate.pri)
 
 SOURCES += \
         main.cpp \
         mainwindow.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    stdutil.h
 
 FORMS += \
         mainwindow.ui

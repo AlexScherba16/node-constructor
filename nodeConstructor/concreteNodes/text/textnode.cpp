@@ -21,34 +21,40 @@ TextNode::TextNode(NodeModel *model) : Node(model), _model(nullptr), _text(nullp
     }
 }
 
-QRectF TextNode::boundingRect() const{
-    return childrenBoundingRect();
-}
-
 void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    Q_UNUSED(widget);
-//    QPen pen(painter->pen());
-//    pen.setStyle(Qt::DashLine);
-//    pen.setColor(QColor(Qt::green));
-
-//    painter->setClipRect(option->exposedRect);
-//    painter->setPen(pen);
-////    painter->setBrush(Qt::SolidPattern);
-//    painter->drawRoundedRect(boundingRect(), 10, 10);
+    Node::paint(painter,option,widget);
 }
 
 QVariant TextNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value){
     return QGraphicsItem::itemChange(change, value);
 }
 
+void TextNode::recalculatePrimitivesSize(){
+    auto width  = geometry().width() - 2 * geometry().spacer();
+    auto height = geometry().height() - 2 * geometry().spacer();
+
+    _text->setWidth(width);
+    _text->setHeight(height);
+
+    return;
+}
+
+void TextNode::mousePressEvent(QGraphicsSceneMouseEvent *event){
+    Node::mousePressEvent(event);
+}
+
 void TextNode::generateGui(){
     if(_text)
         return;
 
+    auto x = geometry().spacer();
+    auto y = geometry().spacer();
+
     _text = new TextPrimitive();
     _text->setText(_model->getText());
-    _text->setPos(mapFromItem(this,0,0));
+    _text->setPos(mapFromItem(this,x, y));
     addToGroup(_text);
+    geometry().setMinimalSize(childrenBoundingRect().size());
 }
 
 void TextNode::updateNodeUi(){

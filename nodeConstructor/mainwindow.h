@@ -6,10 +6,6 @@
 #include "diagramView/diagramView.hpp"
 
 
-using QtNodes::DiagramScenee;
-using QtNodes::DiagramView;
-
-
 namespace Ui {
 class MainWindow;
 }
