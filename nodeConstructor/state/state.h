@@ -1,21 +1,22 @@
-#ifndef STATE_H
-#define STATE_H
+#pragma once
 
 
 class State
 {
 public:
-    State();    //std::unique_ptr<NodeDataModel> const &model);
+    State() :   _resizeState(false),
+                _insideBoundingState(false) {}
+    ~State() = default;
 
-    void setResizingState(bool resize)  {_resizeState = resize;}
-    bool isResizing()                   {return _resizeState;}
+    void setResizingState(bool resize)          {_resizeState = resize;}
+    bool isResizing()                           {return _resizeState;}
 
-    void setSelectedState(bool selected)    {_selectedState = selected;}
-    bool isSelected()                       {return _selectedState;}
+    void setInsideBoundingState(bool inside)    {_insideBoundingState = inside;}
+    bool isInsideBounding()                     {return _insideBoundingState;}
 
 private:
+
     bool _resizeState;
-    bool _selectedState;
+    bool _insideBoundingState;
 };
 
-#endif // STATE_H
